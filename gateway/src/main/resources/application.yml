@@ -23,8 +23,8 @@ spring:
         locator:
           # 服务网关开启服务注册和发现的功能，并且服务网关自动根据服务发现为每一个服务创建了一个路由，
           # 这个路由将以服务名开头的请求路径转发到对应的服务中，且spring cloud gateway默认打开了负载均衡。
-          enabled: true
-          lower-case-service-id: true
+          enabled: false
+          lower-case-service-id: false
       global-filter:
         load-balancer-client:
           enabled: true
