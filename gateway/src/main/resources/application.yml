@@ -37,10 +37,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: eureka-feign-client
+        - id: client-route
           uri: lb://eureka-feign-client # 负载均衡地址
           predicates:
-            - Path=/fc/**
+            - Path=/eureka-feign-client/**
 #          filters:
 #            - StripPrefix=1 # StripPrefix的过滤器在转发之前将/demo去掉
 ---
