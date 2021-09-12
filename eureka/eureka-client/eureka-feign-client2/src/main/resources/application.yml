@@ -1,0 +1,27 @@
+server:
+  port: 8766
+spring:
+  application:
+    name: eureka-feign-client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    appname: eureka-feign-client
+    hostname: localhost
+    lease-renewal-interval-in-seconds: 30 #租约续期间隔（心跳间隔）
+
+feign:
+  hystrix:
+    enabled: true #feign开启hystrix熔断
+
+  # spring-cloud 2020版本中开启feign熔断
+  circuitbreaker:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

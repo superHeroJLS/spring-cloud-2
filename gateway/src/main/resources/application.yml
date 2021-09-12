@@ -1,0 +1,77 @@
+server.port: 8799
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    appname: spring-cloud-gateway
+    hostname: localhost
+    lease-renewal-interval-in-seconds: 30 #租约续期间隔（心跳间隔）
+spring:
+  profiles:
+    active: path_route
+  application:
+    name: spring-cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # 服务网关开启服务注册和发现的功能，并且服务网关自动根据服务发现为每一个服务创建了一个路由，
+          # 这个路由将以服务名开头的请求路径转发到对应的服务中，且spring cloud gateway默认打开了负载均衡。
+          enabled: true
+          lower-case-service-id: true
+      global-filter:
+        load-balancer-client:
+          enabled: true
+---
+profiles: eureka-gateway-loadbalance
+# 有时服务名转发会显得路径太长，或者由于历史原因不能根据服务名去路由，我们可以自定义路径需要自定义路径
+# 同时将spring.cloud.gateway.discovery.locator.enabled改为false，
+# 如果不改，那么之前localhost:8081/eureka-feign-client/test这样的请求地址也能正常访问，这时为每个服务创建了两个路由。
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: eureka-feign-client
+          uri: lb://eureka-feign-client # 负载均衡地址
+          predicates:
+            - Path=/fc/**
+#          filters:
+#            - StripPrefix=1 # StripPrefix的过滤器在转发之前将/demo去掉
+---
+profiles: after_route
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: after_route
+          uri: http://localhost:8765
+          predicates:
+            - After=2021-09-11T00:00:00.000-07:00[Asia/Shanghai]
+
+---
+profiles: path_route_demo
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: path_route
+        uri: https://blog.csdn.net
+        predicates:
+        - Path=/qq_39132177/article/details/{segment}
+
+---
+profiles: path_route
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: path_route
+          uri: http://localhost:8765
+          predicates:
+          - Path=/fc/test
