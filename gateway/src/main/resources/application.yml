@@ -14,7 +14,7 @@ eureka:
     lease-renewal-interval-in-seconds: 30 #租约续期间隔（心跳间隔）
 spring:
   profiles:
-    active: path_route
+    active: eureka-gateway-loadbalance
   application:
     name: spring-cloud-gateway
   cloud:
@@ -29,15 +29,15 @@ spring:
         load-balancer-client:
           enabled: true
 ---
-profiles: eureka-gateway-loadbalance
 # 有时服务名转发会显得路径太长，或者由于历史原因不能根据服务名去路由，我们可以自定义路径需要自定义路径
 # 同时将spring.cloud.gateway.discovery.locator.enabled改为false，
 # 如果不改，那么之前localhost:8081/eureka-feign-client/test这样的请求地址也能正常访问，这时为每个服务创建了两个路由。
+profiles: eureka-gateway-loadbalance
 spring:
   cloud:
     gateway:
       routes:
-        - id: client-route
+        - id: eureka-feign-client-route
           uri: lb://eureka-feign-client # 负载均衡地址
           predicates:
             - Path=/eureka-feign-client/**
