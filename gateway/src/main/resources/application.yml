@@ -14,7 +14,7 @@ eureka:
     lease-renewal-interval-in-seconds: 30 #租约续期间隔（心跳间隔）
 spring:
   profiles:
-    active: path_route
+    active: eureka-gateway-loadbalance
   application:
     name: spring-cloud-gateway
   cloud:
@@ -37,8 +37,8 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: client-route
-          uri: lb://eureka-feign-client # 负载均衡地址
+        - id: eureka-feign-client-route
+          uri: lb://eureka-feign-client #route 负载均衡地址
           predicates:
             - Path=/eureka-feign-client/**
 #          filters:
