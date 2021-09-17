@@ -41,6 +41,8 @@ spring:
           uri: lb://eureka-feign-client # 负载均衡地址
           predicates:
             - Path=/eureka-feign-client/**
+          filters:
+            - RewritePath=/eureka-feign-client/(?<segment>.*), /$\{segment}
 #          filters:
 #            - StripPrefix=1 # StripPrefix的过滤器在转发之前将/demo去掉
 ---
